@@ -1,5 +1,5 @@
 # Smart Robotic Arm
-(Automatic Lifting system (watering)) Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
+My project: Arduino Robotic Arm, is an enhanced version of the original. With a segmented digital display showcasing directional indicators to tell the direction of the arm, it allows tasks done by the robotic arm to be completed more effeciently and accurately. For instance, for industrial applications, if the robotic arm is large or hidden, it prevents operators to fully supervise arm's orientation. In which having a directional indicator as a modification could provides the operator with immediate confirmation that the input is being received by the system and an accurate control over the arm. The biggest challenge in this project...
 
 You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
@@ -9,7 +9,7 @@ You should comment out all portions of your portfolio that you have not complete
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
-| Adrian Kan | Athenian School | Mechanical Engineering | Rising Junior
+| Adrian Kan | Athenian School | Mechanical Engineering | Rising Junior | 
 
 **Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
@@ -39,7 +39,12 @@ For your second milestone, explain what you've worked on since your previous mil
 - Technical details of what you've accomplished and how they contribute to the final goal
 - What has been surprising about the project so far
 - Previous challenges you faced that you overcame
-- What needs to be completed before your final milestone 
+- What needs to be completed before your final milestone
+
+- Implemented 7-segmented digital display
+- Wired and Connected the display with arduino using breadboard and resistors
+- Ensured that the display can be powered
+- Learned to power breadboard with external battery
 
 # First Milestone
 
@@ -48,11 +53,6 @@ For your second milestone, explain what you've worked on since your previous mil
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZU30pw0DPhA?si=AgRVI8BZ4kNFEeqe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         
 For your first milestone, describe what your project is and how you plan to build it. You can include:
-- An explanation about the different components of your project and how they will all integrate together
-- Technical progress you've made so far
-- Challenges you're facing and solving in your future milestones
-- What your plan is to complete your project
-  
 - The plan for this milestone was to finish the baseline project: The Robotic Arm
 - Built the Robotic Arm from scratch
 - Wired the servo with arduino
