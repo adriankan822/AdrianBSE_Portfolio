@@ -54,7 +54,6 @@ For your second milestone, explain what you've worked on since your previous mil
         
 For your first milestone, describe what your project is and how you plan to build it. You can include:
 - The plan for this milestone was to finish the baseline project: The Robotic Arm
-- Built the Robotic Arm from scratch
 - Wired the servo with arduino
 - Wired Joystick with arduino
 - Used the reference code to connect the joystick with robotic arm through arduino to make it function
