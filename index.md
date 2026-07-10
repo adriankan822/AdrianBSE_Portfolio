@@ -544,7 +544,7 @@ The below are the materials used for the project, and a brief description of the
 | 9V Battery | Energy source of the robotic arm | $12.69 | <a href="https://www.amazon.com/dp/B00MH4QM1S/ref=vp_d_pb_TIER4_cml_lp_B0BJ26CHZB_pd?_encoding=UTF8&pf_rd_p=b8d9960f-63a9-4d69-a8de-de9514a27e41&pf_rd_r=1RRARBM9YNNHR89D8B2N&pd_rd_wg=FwKYY&pd_rd_i=B00MH4QM1S&pd_rd_w=XrNnI&content-id=amzn1.sym.b8d9960f-63a9-4d69-a8de-de9514a27e41&pd_rd_r=edb0610d-b8f5-4671-814f-f6cb22938f22&th=1/"> Link </a> |
 
 # Other Resources/Examples
-One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
+Below are resources used for this project, embeded with link for reference. 
 - [Arduino Tutorials: How to Code 7 Segment Display with Arduino](https://www.youtube.com/watch?v=a3YwCwQMPYs/)
 - [RoboticArm for Arduino Cokoino Github Resources](https://github.com/Cokoino/CKK0006/tree/master/)
 - [Determining 7 Segmented Display Type: Cathode or Anode](https://www.youtube.com/watch?v=Fa7BHbPAM98/)
