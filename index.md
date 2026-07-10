@@ -1,9 +1,10 @@
 # Smart Robotic Arm
 My project: Arduino Robotic Arm, is an enhanced version of the original. With a segmented digital display as directional indicators to showcase the direction of the arm, it allows tasks done by the robotic arm to be completed more effeciently and accurately. For instance, for industrial applications, if the robotic arm is large or hidden, it prevents operators to fully supervise arm's orientation. In which having a directional indicator as a modification could provides the operator with immediate confirmation that the input is being received by the system and an accurate control over the arm. The biggest challenge in this project...
 
-You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
 <!--- This is an HTML comment in Markdown -->
+1. references
+2. expand on description for m1 and m2
 <!--- Anything between these symbols will not render on the published site -->
 ```
 
@@ -48,11 +49,8 @@ For your second milestone, explain what you've worked on since your previous mil
 
 # First Milestone
 
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZU30pw0DPhA?si=AgRVI8BZ4kNFEeqe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         
-For your first milestone, describe what your project is and how you plan to build it. You can include:
 - The plan for this milestone was to finish the baseline project: The Robotic Arm
 - Wired the servo with arduino
 - Wired Joystick with arduino
@@ -67,16 +65,10 @@ Notes:
 * The 4x4 Keypad is used to substitute the Joystick Controller due to the limitations on Tinkercad (program used to create this schematic)
 * 4.5V Battery is used to substitute the 9V battery used in the physical model
 
-# Code
-Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
+# C++ Codes for Arduino
 
 Code for Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
 ```c++
-/*
- * Robotic Arm Control with 1-9 Flashing Display
- * Resolved Layout: No Pin Collisions!
- */
-
 #include "src/CokoinoArm.h"
 
 #define buzzerPin 9  // Dedicated solely to the buzzer now!
@@ -309,18 +301,230 @@ void Do_action(void) {
 ```
 
 
-Code 2
+Final Code: Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Display 
 
 ```c++
+#include "src/CokoinoArm.h"
+
+#define buzzerPin 9  // Dedicated solely to the buzzer
+
+// Collision-free display pin mapping
+int a = 11;
+int b = 2;
+int c = 13;
+int d = 12;
+int e = 3;
+int f = 8;
+int g = 10;
+
+CokoinoArm arm;
+int xL, yL, xR, yR;
+
+const int act_max = 5;
+int act[act_max][4];    
+int num = 0, num_do = 0;
+
+// Global tracking variable for current numeric action state
+int statusNum = 0;
+
+// Helper function to render numbers 0-8 (Common Cathode)
+void displayDigit(int digit) {
+  // Clear all segments first
+  digitalWrite(a, LOW);   digitalWrite(b, LOW);   digitalWrite(c, LOW);
+  digitalWrite(d, LOW);   digitalWrite(e, LOW);   digitalWrite(f, LOW);
+  digitalWrite(g, LOW);
+
+  switch (digit) {
+    case 0: // Idle / Standby
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH);
+      break;
+    case 1: // Left
+      digitalWrite(b, HIGH); digitalWrite(c, HIGH);
+      break;
+    case 2: // Right
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 3: // Up
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 4: // Down
+      digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 5: // Close Claw
+      digitalWrite(a, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 6: // Open Claw
+      digitalWrite(a, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 7: // Save / Capture Position
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH);
+      break;
+    case 8: // Playback
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+  }
+}
+
+// Background display driver engine
+void updateDisplay() {
+  displayDigit(statusNum);
+}
+
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("Hello World!");
+  // Initialize Display Pins
+  pinMode(a, OUTPUT);  pinMode(b, OUTPUT);  pinMode(c, OUTPUT);  pinMode(d, OUTPUT);
+  pinMode(e, OUTPUT);  pinMode(f, OUTPUT);  pinMode(g, OUTPUT);
+
+  // Initialize Robotic Arm Components
+  arm.ServoAttach(4, 5, 6, 7);
+  arm.JoyStickAttach(A0, A1, A2, A3);
+  pinMode(buzzerPin, OUTPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  // Reset state to 0 (Idle) at the start of every cycle
+  statusNum = 0;
 
+  // Read Joystick Positions
+  xL = arm.JoyStickL.read_x();
+  yL = arm.JoyStickL.read_y();
+  xR = arm.JoyStickR.read_x();
+  yR = arm.JoyStickR.read_y();
+  
+  date_processing(&xL, &yL);
+  date_processing(&xR, &yR);
+  
+  // Process Movements (these alter statusNum if active)
+  turnUD();
+  turnLR();
+  turnCO();
+  C_action();
+  Do_action();
+
+  // Push current numeric status to display hardware
+  updateDisplay();
+}
+
+// === ROBOTIC ARM MECHANICAL LOGIC WITH STATE CAPTURE ===
+
+void turnUD(void) {
+  if (xL != 512) {
+    if (0 <= xL && xL <= 100) { arm.up(10); statusNum = 3; return; }
+    if (900 < xL && xL <= 1024) { arm.down(10); statusNum = 4; return; } 
+    if (100 < xL && xL <= 200) { arm.up(20); statusNum = 3; return; }
+    if (800 < xL && xL <= 900) { arm.down(20); statusNum = 4; return; }
+    if (200 < xL && xL <= 300) { arm.up(25); statusNum = 3; return; }
+    if (700 < xL && xL <= 800) { arm.down(25); statusNum = 4; return; }
+    if (300 < xL && xL <= 400) { arm.up(30); statusNum = 3; return; }
+    if (600 < xL && xL <= 700) { arm.down(30); statusNum = 4; return; }
+    if (400 < xL && xL <= 480) { arm.up(35); statusNum = 3; return; }
+    if (540 < xL && xL <= 600) { arm.down(35); statusNum = 4; return; } 
+  }
+}
+
+void turnLR(void) {
+  if (yL != 512) {
+    if (0 <= yL && yL <= 100) { arm.right(0); statusNum = 2; return; }
+    if (900 < yL && yL <= 1024) { arm.left(0); statusNum = 1; return; }  
+    if (100 < yL && yL <= 200) { arm.right(5); statusNum = 2; return; }
+    if (800 < yL && yL <= 900) { arm.left(5); statusNum = 1; return; }
+    if (200 < yL && yL <= 300) { arm.right(10); statusNum = 2; return; }
+    if (700 < yL && yL <= 800) { arm.left(10); statusNum = 1; return; }
+    if (300 < yL && yL <= 400) { arm.right(15); statusNum = 2; return; }
+    if (600 < yL && yL <= 700) { arm.left(15); statusNum = 1; return; }
+    if (400 < yL && yL <= 480) { arm.right(20); statusNum = 2; return; }
+    if (540 < yL && yL <= 600) { arm.left(20); statusNum = 1; return; }
+  }
+}
+
+void turnCO(void) {
+  if (xR != 512) {
+    if (0 <= xR && xR <= 100) { arm.close(0); statusNum = 5; return; }
+    if (900 < xR && xR <= 1024) { arm.open(0); statusNum = 6; return; } 
+    if (100 < xR && xR <= 200) { arm.close(5); statusNum = 5; return; }
+    if (800 < xR && xR <= 900) { arm.open(5); statusNum = 6; return; }
+    if (200 < xR && xR <= 300) { arm.close(10); statusNum = 5; return; }
+    if (700 < xR && xR <= 800) { arm.open(10); statusNum = 6; return; }
+    if (300 < xR && xR <= 400) { arm.close(15); statusNum = 5; return; }
+    if (600 < xR && xR <= 700) { arm.open(15); statusNum = 6; return; }
+    if (400 < xR && xR <= 480) { arm.close(20); statusNum = 5; return; }
+    if (540 < xR && xR <= 600) { arm.open(20); statusNum = 6; return; } 
+  }
+}
+
+void date_processing(int *x, int *y) {
+  if (abs(512 - *x) > abs(512 - *y)) {
+    *y = 512;
+  } else {
+    *x = 512;
+  }
+}
+
+void buzzer(int H, int L) {
+  while (yR < 420) {
+    digitalWrite(buzzerPin, HIGH);
+    delayMicroseconds(H);
+    digitalWrite(buzzerPin, LOW);
+    delayMicroseconds(L);
+    yR = arm.JoyStickR.read_y();
+    updateDisplay();
+  }
+  while (yR > 600) {
+    digitalWrite(buzzerPin, HIGH);
+    delayMicroseconds(H);
+    digitalWrite(buzzerPin, LOW);
+    delayMicroseconds(L);
+    yR = arm.JoyStickR.read_y();
+    updateDisplay();
+  }
+}
+
+void C_action(void) {
+  if (yR > 800) {
+    statusNum = 7; // Show Capture Status
+    int *p;
+    p = arm.captureAction();
+    for (char i = 0; i < 4; i++) {
+      act[num][i] = *p;
+      p = p + 1;
+    }
+    num++;
+    num_do = num;
+    if (num >= act_max) {
+      num = 0;
+      buzzer(600, 400);
+    }
+    while (yR > 600) { 
+      yR = arm.JoyStickR.read_y(); 
+      updateDisplay();
+    }
+  }
+}
+
+void Do_action(void) {
+  if (yR < 220) {
+    statusNum = 8; // Show Playback Status
+    buzzer(200, 300);
+    for (int i = 0; i < num_do; i++) {
+      arm.do_action(act[i], 15);
+      updateDisplay();
+    }
+    num = 0;
+    while (yR < 420) { 
+      yR = arm.JoyStickR.read_y(); 
+      updateDisplay();
+    }
+    
+    for (int i = 0; i < 2000; i++) {
+      digitalWrite(buzzerPin, HIGH);
+      delayMicroseconds(200);
+      digitalWrite(buzzerPin, LOW);
+      delayMicroseconds(300);
+      if (i % 100 == 0) {
+        updateDisplay();
+      }
+    }
+  }
 }
 ```
 
