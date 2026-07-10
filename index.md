@@ -5,6 +5,7 @@ My project: Arduino Robotic Arm, is an enhanced version of the original. With a 
 <!--- This is an HTML comment in Markdown -->
 1. references
 2. expand on description for m1 and m2
+3. Citation of AI?
 <!--- Anything between these symbols will not render on the published site -->
 ```
 
@@ -69,6 +70,7 @@ Notes:
 
 Code for Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
 ```c++
+//CODE 1.0
 #include "src/CokoinoArm.h"
 
 #define buzzerPin 9  // Dedicated solely to the buzzer now!
@@ -299,11 +301,13 @@ void Do_action(void) {
   }
 }
 ```
+&ensp;
+&nbsp;
 
-
-Final Code: Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Display 
+**Final Code: Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Display**
 
 ```c++
+//CODE 2.0
 #include "src/CokoinoArm.h"
 
 #define buzzerPin 9  // Dedicated solely to the buzzer
@@ -541,8 +545,10 @@ The below are the materials used for the project, and a brief description of the
 
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
-- [Github Portfolio Editing]([https://www.markdownguide.org/extended-syntax/)
-- [Example 2](https://sviatil0.github.io/Sviatoslav_BSE/)
-- [Example 3](https://arneshkumar.github.io/arneshbluestamp/)
+- [Arduino Tutorials: How to Code 7 Segment Display with Arduino](https://www.youtube.com/watch?v=a3YwCwQMPYs/)
+- [RoboticArm for Arduino Cokoino Github Resources](https://github.com/Cokoino/CKK0006/tree/master/)
+- [Determining 7 Segmented Display Type: Cathode or Anode](https://www.youtube.com/watch?v=Fa7BHbPAM98/)
+- [7 Segmented Display Cathode and Anode: Pin to LED Figure](https://www.allaboutcircuits.com/projects/interface-a-seven-segment-display-to-an-arduino/)
+- [Scehmatic Diagram Creation: TinkerCad](https://www.tinkercad.com/things/bXKhfOuNItm-robotic-arm-controller-7-segmented-display?sharecode=LeewJ7r1rAMRFM3bcTwUT3AfzPoUdHjL6_iJrbxEljI)
 
-To watch the BSE tutorial on how to create a portfolio, click here.
+2026 BSE Summer Project Concluded.
