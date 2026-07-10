@@ -68,7 +68,8 @@ Notes:
 
 # C++ Codes for Arduino
 
-Code for Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
+**Code 1:** \
+Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
 ```c++
 //CODE 1.0
 #include "src/CokoinoArm.h"
@@ -301,10 +302,10 @@ void Do_action(void) {
   }
 }
 ```
-&ensp;
-&nbsp;
-
-**Final Code: Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Display**
+\
+\
+**Final Code:** \
+Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Display
 
 ```c++
 //CODE 2.0
