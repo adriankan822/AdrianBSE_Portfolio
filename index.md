@@ -70,178 +70,241 @@ Notes:
 # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
-Code for Joystick to Control the Robotic Arm
+Code for Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
 ```c++
- * This code applies to cokoino mechanical arm
- *                                     ________
- *                         ----|servo4| 
- *                        |            --------
- *                    |servo3|   
- *                        |
- *                        |
- *                    |servo2|
- *                        |
- *                        |
- *                  ___________
- *                  |  servo1 |
- *         ____________________
- *         ____________________
- * Fanctions:
- * arm.servo#.read();   //read the servo of angle
- * 
- * arm.servo#.write(angle);   //servo run
- * 
- * arm.left(speed);    //perform the action 
- * arm.right(speed);
- * arm.up(speed);
- * arm.down(speed);
- * arm.open(speed);
- * arm.close(speed);
- * 
- * arm.captureAction();    //capture the current action,return pointer array
- * arm.do_action(int *p,int speed);  //P is a pointer to the array
- * 
- * arm.JoyStickL.read_x(); //Returns joystick numerical
- * arm.JoyStickL.read_y();
- * arm.JoyStickR.read_x();
- * arm.JoyStickR.read_y();
- *
+/*
+ * Robotic Arm Control with 1-9 Flashing Display
+ * Resolved Layout: No Pin Collisions!
+ */
+
 #include "src/CokoinoArm.h"
-#define buzzerPin 9
+
+#define buzzerPin 9  // Dedicated solely to the buzzer now!
+
+// Your brand new collision-free pin mappings
+int a = 11;
+int b = 2;
+int c = 13;
+int d = 12;
+int e = 3;
+int f = 8;
+int g = 10;
 
 CokoinoArm arm;
-int xL,yL,xR,yR;
+int xL, yL, xR, yR;
 
-const int act_max=10;    //Default 10 action,4 the Angle of servo
-int act[act_max][4];    //Only can change the number of action
-int num=0,num_do=0;
-///////////////////////////////////////////////////////////////
-void turnUD(void){
-  if(xL!=512){
-    if(0<=xL && xL<=100){arm.up(10);return;}
-    if(900<xL && xL<=1024){arm.down(10);return;} 
-    if(100<xL && xL<=200){arm.up(20);return;}
-    if(800<xL && xL<=900){arm.down(20);return;}
-    if(200<xL && xL<=300){arm.up(25);return;}
-    if(700<xL && xL<=800){arm.down(25);return;}
-    if(300<xL && xL<=400){arm.up(30);return;}
-    if(600<xL && xL<=700){arm.down(30);return;}
-    if(400<xL && xL<=480){arm.up(35);return;}
-    if(540<xL && xL<=600){arm.down(35);return;} 
-    }
-}
-///////////////////////////////////////////////////////////////
-void turnLR(void){
-  if(yL!=512){
-    if(0<=yL && yL<=100){arm.right(0);return;}
-    if(900<yL && yL<=1024){arm.left(0);return;}  
-    if(100<yL && yL<=200){arm.right(5);return;}
-    if(800<yL && yL<=900){arm.left(5);return;}
-    if(200<yL && yL<=300){arm.right(10);return;}
-    if(700<yL && yL<=800){arm.left(10);return;}
-    if(300<yL && yL<=400){arm.right(15);return;}
-    if(600<yL && yL<=700){arm.left(15);return;}
-    if(400<yL && yL<=480){arm.right(20);return;}
-    if(540<yL && yL<=600){arm.left(20);return;}
+const int act_max = 5;
+int act[act_max][4];    
+int num = 0, num_do = 0;
+
+// Non-blocking timer configuration for smooth flashing
+unsigned long lastDisplayUpdate = 0;
+const long interval = 400;  // Flashing speed (400ms per digit)
+int currentDigit = 1;
+
+// Helper function to render numbers 1-9
+void displayDigit(int digit) {
+  // Clear all segments first
+  digitalWrite(a, LOW);   digitalWrite(b, LOW);   digitalWrite(c, LOW);
+  digitalWrite(d, LOW);   digitalWrite(e, LOW);   digitalWrite(f, LOW);
+  digitalWrite(g, LOW);
+
+  // Turn on segments according to the digit (Common Cathode)
+  switch (digit) {
+    case 1:
+      digitalWrite(b, HIGH); digitalWrite(c, HIGH);
+      break;
+    case 2:
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 3:
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 4:
+      digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 5:
+      digitalWrite(a, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 6:
+      digitalWrite(a, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 7:
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH);
+      break;
+    case 8:
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 9:
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
   }
 }
-///////////////////////////////////////////////////////////////
-void turnCO(void){
-  if(xR!=512){
-    if(0<=xR && xR<=100){arm.close(0);return;}
-    if(900<xR && xR<=1024){arm.open(0);return;} 
-    if(100<xR && xR<=200){arm.close(5);return;}
-    if(800<xR && xR<=900){arm.open(5);return;}
-    if(200<xR && xR<=300){arm.close(10);return;}
-    if(700<xR && xR<=800){arm.open(10);return;}
-    if(300<xR && xR<=400){arm.close(15);return;}
-    if(600<xR && xR<=700){arm.open(15);return;}
-    if(400<xR && xR<=480){arm.close(20);return;}
-    if(540<xR && xR<=600){arm.open(20);return;} 
-    }
-}
-///////////////////////////////////////////////////////////////
-void date_processing(int *x,int *y){
-  if(abs(512-*x)>abs(512-*y))
-    {*y = 512;}
-  else
-    {*x = 512;}
-}
-///////////////////////////////////////////////////////////////
-void buzzer(int H,int L){
-  while(yR<420){
-    digitalWrite(buzzerPin,HIGH);
-    delayMicroseconds(H);
-    digitalWrite(buzzerPin,LOW);
-    delayMicroseconds(L);
-    yR = arm.JoyStickR.read_y();
-    }
-  while(yR>600){
-    digitalWrite(buzzerPin,HIGH);
-    delayMicroseconds(H);
-    digitalWrite(buzzerPin,LOW);
-    delayMicroseconds(L);
-    yR = arm.JoyStickR.read_y();
-    }
-}
-///////////////////////////////////////////////////////////////
-void C_action(void){
-  if(yR>800){
-    int *p;
-    p=arm.captureAction();
-    for(char i=0;i<4;i++){
-    act[num][i]=*p;
-    p=p+1;     
-    }
-    num++;
-    num_do=num;
-    if(num>=act_max){
-      num=0;
-      buzzer(600,400);
-      }
-    while(yR>600){yR = arm.JoyStickR.read_y();}
-    //Serial.println(act[0][0]);
-  }
-}
-///////////////////////////////////////////////////////////////
-void Do_action(void){
-  if(yR<220){
-    buzzer(200,300);
-    for(int i=0;i<num_do;i++){
-      arm.do_action(act[i],15);
-      }
-    num=0;
-    while(yR<420){yR = arm.JoyStickR.read_y();}
-    for(int i=0;i<2000;i++){
-      digitalWrite(buzzerPin,HIGH);
-      delayMicroseconds(200);
-      digitalWrite(buzzerPin,LOW);
-      delayMicroseconds(300);        
+
+// Background display engine to bypass long robot movement delays
+void updateDisplay() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - lastDisplayUpdate >= interval) {
+    lastDisplayUpdate = currentMillis;
+    displayDigit(currentDigit);
+    currentDigit++;
+    if (currentDigit > 9) {
+      currentDigit = 1;
     }
   }
 }
-///////////////////////////////////////////////////////////////
+
 void setup() {
-  //Serial.begin(9600);
-  //arm of servo motor connection pins
-  arm.ServoAttach(4,5,6,7);
-  //arm of joy stick connection pins : xL,yL,xR,yR
-  arm.JoyStickAttach(A0,A1,A2,A3);
-  pinMode(buzzerPin,OUTPUT);
+  // Initialize Display Pins
+  pinMode(a, OUTPUT);  pinMode(b, OUTPUT);  pinMode(c, OUTPUT);  pinMode(d, OUTPUT);
+  pinMode(e, OUTPUT);  pinMode(f, OUTPUT);  pinMode(g, OUTPUT);
+
+  // Initialize Robotic Arm Components
+  arm.ServoAttach(4, 5, 6, 7);        // Dedicated servo control pins
+  arm.JoyStickAttach(A0, A1, A2, A3); // Joystick control pins
+  pinMode(buzzerPin, OUTPUT);
 }
-///////////////////////////////////////////////////////////////
+
 void loop() {
+  // 1. Refresh background display animation continuously
+  updateDisplay();
+
+  // 2. Read Joystick Positions
   xL = arm.JoyStickL.read_x();
   yL = arm.JoyStickL.read_y();
   xR = arm.JoyStickR.read_x();
   yR = arm.JoyStickR.read_y();
-  date_processing(&xL,&yL);
-  date_processing(&xR,&yR);
+  
+  date_processing(&xL, &yL);
+  date_processing(&xR, &yR);
+  
+  // 3. Process Live Robot Movements & Actions
   turnUD();
   turnLR();
   turnCO();
   C_action();
   Do_action();
+}
+
+// === ROBOTIC ARM MECHANICAL LOGIC ===
+
+void turnUD(void) {
+  if (xL != 512) {
+    if (0 <= xL && xL <= 100) { arm.up(10); return; }
+    if (900 < xL && xL <= 1024) { arm.down(10); return; } 
+    if (100 < xL && xL <= 200) { arm.up(20); return; }
+    if (800 < xL && xL <= 900) { arm.down(20); return; }
+    if (200 < xL && xL <= 300) { arm.up(25); return; }
+    if (700 < xL && xL <= 800) { arm.down(25); return; }
+    if (300 < xL && xL <= 400) { arm.up(30); return; }
+    if (600 < xL && xL <= 700) { arm.down(30); return; }
+    if (400 < xL && xL <= 480) { arm.up(35); return; }
+    if (540 < xL && xL <= 600) { arm.down(35); return; } 
+  }
+}
+
+void turnLR(void) {
+  if (yL != 512) {
+    if (0 <= yL && yL <= 100) { arm.right(0); return; }
+    if (900 < yL && yL <= 1024) { arm.left(0); return; }  
+    if (100 < yL && yL <= 200) { arm.right(5); return; }
+    if (800 < yL && yL <= 900) { arm.left(5); return; }
+    if (200 < yL && yL <= 300) { arm.right(10); return; }
+    if (700 < yL && yL <= 800) { arm.left(10); return; }
+    if (300 < yL && yL <= 400) { arm.right(15); return; }
+    if (600 < yL && yL <= 700) { arm.left(15); return; }
+    if (400 < yL && yL <= 480) { arm.right(20); return; }
+    if (540 < yL && yL <= 600) { arm.left(20); return; }
+  }
+}
+
+void turnCO(void) {
+  if (xR != 512) {
+    if (0 <= xR && xR <= 100) { arm.close(0); return; }
+    if (900 < xR && xR <= 1024) { arm.open(0); return; } 
+    if (100 < xR && xR <= 200) { arm.close(5); return; }
+    if (800 < xR && xR <= 900) { arm.open(5); return; }
+    if (200 < xR && xR <= 300) { arm.close(10); return; }
+    if (700 < xR && xR <= 800) { arm.open(10); return; }
+    if (300 < xR && xR <= 400) { arm.close(15); return; }
+    if (600 < xR && xR <= 700) { arm.open(15); return; }
+    if (400 < xR && xR <= 480) { arm.close(20); return; }
+    if (540 < xR && xR <= 600) { arm.open(20); return; } 
+  }
+}
+
+void date_processing(int *x, int *y) {
+  if (abs(512 - *x) > abs(512 - *y)) {
+    *y = 512;
+  } else {
+    *x = 512;
+  }
+}
+
+void buzzer(int H, int L) {
+  while (yR < 420) {
+    digitalWrite(buzzerPin, HIGH);
+    delayMicroseconds(H);
+    digitalWrite(buzzerPin, LOW);
+    delayMicroseconds(L);
+    yR = arm.JoyStickR.read_y();
+    updateDisplay(); // Maintains flashing sequence during active buzzer alerts
+  }
+  while (yR > 600) {
+    digitalWrite(buzzerPin, HIGH);
+    delayMicroseconds(H);
+    digitalWrite(buzzerPin, LOW);
+    delayMicroseconds(L);
+    yR = arm.JoyStickR.read_y();
+    updateDisplay(); // Maintains flashing sequence during active buzzer alerts
+  }
+}
+
+void C_action(void) {
+  if (yR > 800) {
+    int *p;
+    p = arm.captureAction();
+    for (char i = 0; i < 4; i++) {
+      act[num][i] = *p;
+      p = p + 1;
+    }
+    num++;
+    num_do = num;
+    if (num >= act_max) {
+      num = 0;
+      buzzer(600, 400);
+    }
+    while (yR > 600) { 
+      yR = arm.JoyStickR.read_y(); 
+      updateDisplay();
+    }
+  }
+}
+
+void Do_action(void) {
+  if (yR < 220) {
+    buzzer(200, 300);
+    for (int i = 0; i < num_do; i++) {
+      arm.do_action(act[i], 15);
+      updateDisplay(); // Keeps screen ticking forward while arm is completing playback loops
+    }
+    num = 0;
+    while (yR < 420) { 
+      yR = arm.JoyStickR.read_y(); 
+      updateDisplay();
+    }
+    
+    // Non-blocking approach for the end-of-sequence 1-second long tone
+    for (int i = 0; i < 2000; i++) {
+      digitalWrite(buzzerPin, HIGH);
+      delayMicroseconds(200);
+      digitalWrite(buzzerPin, LOW);
+      delayMicroseconds(300);
+      if (i % 100 == 0) {
+        updateDisplay(); 
+      }
+    }
+  }
 }
 ```
 
