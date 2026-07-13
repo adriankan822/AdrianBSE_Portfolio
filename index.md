@@ -309,7 +309,9 @@ Directional Indicator - Syncronized Robotic Arm Controller and 7 Segmented Displ
 //CODE 2.0
 #include "src/CokoinoArm.h"
 
-#define buzzerPin 9  // Dedicated solely to the buzzer
+#define buzzerPin 9       // Dedicated solely to the buzzer
+#define ledPin A4         // Replay indicator LED
+#define clearButtonPin A5 // Push button to clear recorded moves
 
 // Collision-free display pin mapping
 int a = 11;
@@ -330,7 +332,7 @@ int num = 0, num_do = 0;
 // Global tracking variable for current numeric action state
 int statusNum = 0;
 
-// Helper function to render numbers 0-8 (Common Cathode)
+// Helper function to render numbers 0-9 (Common Cathode)
 void displayDigit(int digit) {
   // Clear all segments first
   digitalWrite(a, LOW);   digitalWrite(b, LOW);   digitalWrite(c, LOW);
@@ -359,11 +361,14 @@ void displayDigit(int digit) {
     case 6: // Open Claw
       digitalWrite(a, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
       break;
-    case 7: // Save / Capture Position
+    case 7: // Clear / Remove Recorded Moves
       digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH);
       break;
     case 8: // Playback
       digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(e, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
+      break;
+    case 9: // Save / Capture Position
+      digitalWrite(a, HIGH); digitalWrite(b, HIGH); digitalWrite(c, HIGH); digitalWrite(d, HIGH); digitalWrite(f, HIGH); digitalWrite(g, HIGH);
       break;
   }
 }
@@ -377,6 +382,13 @@ void setup() {
   // Initialize Display Pins
   pinMode(a, OUTPUT);  pinMode(b, OUTPUT);  pinMode(c, OUTPUT);  pinMode(d, OUTPUT);
   pinMode(e, OUTPUT);  pinMode(f, OUTPUT);  pinMode(g, OUTPUT);
+
+  // Initialize LED Pin
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+
+  // Initialize Clear Button Pin (Using internal pullup resistor)
+  pinMode(clearButtonPin, INPUT_PULLUP);
 
   // Initialize Robotic Arm Components
   arm.ServoAttach(4, 5, 6, 7);
@@ -397,15 +409,42 @@ void loop() {
   date_processing(&xL, &yL);
   date_processing(&xR, &yR);
   
-  // Process Movements (these alter statusNum if active)
+  // Process Movements and Buttons
   turnUD();
   turnLR();
   turnCO();
   C_action();
   Do_action();
+  checkClearButton(); // Constantly scans for the memory clear button press
 
   // Push current numeric status to display hardware
   updateDisplay();
+}
+
+// === UPDATED FUNCTION: CLEAR MEMORY BUTTON WITH 2-SECOND DELAY ===
+void checkClearButton() {
+  // If button is pressed (reads LOW due to INPUT_PULLUP)
+  if (digitalRead(clearButtonPin) == LOW) {
+    num = 0;       // Reset current step counter
+    num_do = 0;    // Reset total steps playback counter
+    statusNum = 7; // Force status tracking to '7'
+    updateDisplay(); // Push the '7' onto the physical 7-segment pins immediately
+    
+    // Give a short double-beep to confirm erasure
+    for (int i = 0; i < 2; i++) {
+      digitalWrite(buzzerPin, HIGH);
+      delay(60);
+      digitalWrite(buzzerPin, LOW);
+      delay(60);
+    }
+    
+    delay(2000); // Freeze the program here for 2 seconds while '7' stays lit
+    
+    // Safety check: if they are still holding down the button after 2 seconds, wait here
+    while (digitalRead(clearButtonPin) == LOW) {
+      updateDisplay(); 
+    }
+  }
 }
 
 // === ROBOTIC ARM MECHANICAL LOGIC WITH STATE CAPTURE ===
@@ -484,7 +523,7 @@ void buzzer(int H, int L) {
 
 void C_action(void) {
   if (yR > 800) {
-    statusNum = 7; // Show Capture Status
+    statusNum = 9; // Shifted Save/Capture Status to '9'
     int *p;
     p = arm.captureAction();
     for (char i = 0; i < 4; i++) {
@@ -506,7 +545,9 @@ void C_action(void) {
 
 void Do_action(void) {
   if (yR < 220) {
-    statusNum = 8; // Show Playback Status
+    statusNum = 8;             // Show Playback Status
+    digitalWrite(ledPin, HIGH); // Turn on the Replay Indicator LED
+    
     buzzer(200, 300);
     for (int i = 0; i < num_do; i++) {
       arm.do_action(act[i], 15);
@@ -527,6 +568,8 @@ void Do_action(void) {
         updateDisplay();
       }
     }
+    
+    digitalWrite(ledPin, LOW); // Turn off the Replay Indicator LED
   }
 }
 ```
