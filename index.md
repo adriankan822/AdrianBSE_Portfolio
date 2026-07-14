@@ -61,7 +61,7 @@ For your second milestone, explain what you've worked on since your previous mil
 # Schematics 
 Wiring Diagram of the Robotic Arm (4 Servos) & Joystick Controller & Segmented Display
 
-![Headstone Image](schematic.png)
+![Headstone Image](schematic2.png)
 Notes:
 * The 4x4 Keypad is used to substitute the Joystick Controller due to the limitations on Tinkercad (program used to create this schematic)
 * 4.5V Battery is used to substitute the 9V battery used in the physical model
