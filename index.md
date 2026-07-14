@@ -41,20 +41,22 @@ For your second milestone, explain what you've worked on since your previous mil
 - Previous challenges you faced that you overcame
 - What needs to be completed before your final milestone
 
-- Implemented 7-segmented digital display
-- Wired and Connected the display with arduino using breadboard and resistors
+- This milestone, I changed my modification idea into a directional indicator using a 7-segmented digital display that I was able to implement through wires and a breadboard. 
+- C
 - Ensured that the display can be powered
 - Learned to power breadboard with external battery
+- wiring was really confusing in terms of the corresponding places like ground, voltage, and signal, and the coordinates. 
 
 # First Milestone
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZU30pw0DPhA?si=AgRVI8BZ4kNFEeqe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         
-- The plan for this milestone was to finish the baseline project: The Robotic Arm
-- Wired the servo with arduino
-- Wired Joystick with arduino
-- Used the reference code to connect the joystick with robotic arm through arduino to make it function
-- Challenge faced: the wiring was really confusing in terms of the corresponding places like ground, voltage, and signal, and the coordinates
+- This milestone, I completed the overall structure and baseline coding of the robotic arm with Cokoino's Github Resources.
+- The arm uses acrylic boards as the foundation. There is a bearing wheel to support the rotation of the arm. There are 4 aluminum column supporting the base of the arm, and only one aluminum column screwed onto the nanoboard to keep it in place.
+- The 4 servos are the "joints" that makes the arm move and rotate by adjusting the angle using the value given by the joystick. Each servo is wired connected to a Nanoshield to Pin 4,5,6,7. The Nanoshield expands the functionality of arduino nano to implement more components. Other than Servos, the joystick controller is wired to Pin A0,A1,A2,A3. The arm is powered by a 9V battery.
+- Arduino uses c++ codes, programmed into arduino software on my laptop and connected to the nanoboard using a wire to transfer the code into the nanoboard and able to be disconnected from laptop and power solely by 9V battery.
+- Challenge faced: Changing the nanoshield was a challenge because the replacement was larger than the nanoshield designed for the arm, therefore the only solution was to put on one screw to keep it in place since the stability of the nanoboard wouldn't affect the functionality of the arm. This solution could be enhanced in future milestones. 
+
 
 # Schematics 
 Wiring Diagram of the Robotic Arm (4 Servos) & Joystick Controller & Segmented Display
