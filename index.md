@@ -15,19 +15,16 @@ My project: Arduino Robotic Arm, is an enhanced version of the original. With a 
 
 **Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
-![Headstone Image](logo.png)
+![Headstone Image](logo2.png)
   
 # Final Milestone
 
-**Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SCJ6xmDAOP4?si=PjynrS-9YHmCODr-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/F7M7imOVGug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-For your final milestone, explain the outcome of your project. Key details to include are:
-- What you've accomplished since your previous milestone
-- What your biggest challenges and triumphs were at BSE
-- A summary of key topics you learned about
-- What you hope to learn in the future after everything you've learned at BSE
+- This milestone, I sucessfully coded the segmented display into a directional indicator, where the segmented display could show a specific number when the arm is facing the corresponding direction as listed. (1-Left, 2-Right, 3-Up, 4-Down, 5-Close Claw, 6- Open Claw, 7- Reset Memory, 8- Replay in Progress, 9 - Recorded Arm Position). With time to spare, I implemented a LED light and Button to add onto the system on the robotic arm that could memorise a set of the arms position and being able to re-preform the recorded set of positions. The LED is used to specify when the arm is replaying the set of positions, whereas the button is used to erase the recorded set of positions so operators could re-record a new set of position.
+- The biggest challenge in this project is wiring the segmented display to the nanoboard through the breadboard. Since the segmented display had 10 pins, 2 ground and 8 for each individual LED on the display, and each pin is wired to one individual number on the nanoboard, it was challenging to keep track to which number on the nanoboard could power which exact LED on the display. This lesson reminded me to do a deeper research into the components I'm not familar with to prevent multiple trials of rewiring. 
+- I also learned basic coding with C++ as it was the only arduino was compatible with.
+- I hope to delve deeper into C++ or python, computer science in general, as I realised the importance of computer science in the engineering industry and the scope of future careers. 
 
 
 
@@ -35,24 +32,18 @@ For your final milestone, explain the outcome of your project. Key details to in
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/OIRKW8gqU_4?si=u_HuzuzDRtnHKFDp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-For your second milestone, explain what you've worked on since your previous milestone. You can highlight:
-- Technical details of what you've accomplished and how they contribute to the final goal
-- What has been surprising about the project so far
-- Previous challenges you faced that you overcame
-- What needs to be completed before your final milestone
-
-- This milestone, I changed my modification idea into a directional indicator using a 7-segmented digital display that I was able to implement through wires and a breadboard. 
-- C
-- Ensured that the display can be powered
-- Learned to power breadboard with external battery
-- wiring was really confusing in terms of the corresponding places like ground, voltage, and signal, and the coordinates. 
+- This milestone, I changed my modification idea into a directional indicator using a 7-segmented digital display that I was able to implement through wires and a breadboard. The display is connected to under Pin 2,3,8,10,11,12,13 to the nanoboard. The ground pin is connected to a 220 ohm resistor to the nanoboard. This gives completes the physical project (all wiring and building work). 
+- About the previous challenge about the stability of the nanoboard, I added an empty battery pack under the nanoboard beside the aluminium column because the battery is hollow in the inside giving a safe space for microchips on the nanoboard, and the sides of the battery pack gives a good supporting structure to the nanoboard. 
+- I was able to learn how to use a breadboard, and the overall structure of the segmented display.
+- Another challenge I faced was when wiring ground, voltage, and signal to the segmented display, ensuring that the specific LED on the display could be powered.
+- Before the final milestone, I would need to improvise the code for the directional indicator because the current code is to have the display flash numbers from 1-9. Other than that, I would need to organize the wire to prevent it from limiting the movement of the robotic arm or blocking the view of the segmented display.
 
 # First Milestone
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZU30pw0DPhA?si=AgRVI8BZ4kNFEeqe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         
 - This milestone, I completed the overall structure and baseline coding of the robotic arm with Cokoino's Github Resources.
-- The arm uses acrylic boards as the foundation. There is a bearing wheel to support the rotation of the arm. There are 4 aluminum column supporting the base of the arm, and only one aluminum column screwed onto the nanoboard to keep it in place.
+- The arm uses acrylic boards as the foundation. There is a bearing wheel to support the rotation of the arm. There are 4 aluminum column supporting the base of the arm, and only one aluminium column screwed onto the nanoboard to keep it in place.
 - The 4 servos are the "joints" that makes the arm move and rotate by adjusting the angle using the value given by the joystick. Each servo is wired connected to a Nanoshield to Pin 4,5,6,7. The Nanoshield expands the functionality of arduino nano to implement more components. Other than Servos, the joystick controller is wired to Pin A0,A1,A2,A3. The arm is powered by a 9V battery.
 - Arduino uses c++ codes, programmed into arduino software on my laptop and connected to the nanoboard using a wire to transfer the code into the nanoboard and able to be disconnected from laptop and power solely by 9V battery.
 - Challenge faced: Changing the nanoshield was a challenge because the replacement was larger than the nanoshield designed for the arm, therefore the only solution was to put on one screw to keep it in place since the stability of the nanoboard wouldn't affect the functionality of the arm. This solution could be enhanced in future milestones. 
