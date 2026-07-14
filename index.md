@@ -1,19 +1,22 @@
-# Smart Robotic Arm
+# Smart Robotic Arm + Directional Indicator
 My project: Arduino Robotic Arm, is an enhanced version of the original. With a segmented digital display as directional indicators to showcase the direction of the arm, it allows tasks done by the robotic arm to be completed more effeciently and accurately. For instance, for industrial applications, if the robotic arm is large or hidden, it prevents operators to fully supervise arm's orientation. In which having a directional indicator as a modification could provides the operator with immediate confirmation that the input is being received by the system and an accurate control over the arm. The biggest challenge in this project...
 
 ```HTML 
-<!--- This is an HTML comment in Markdown -->
-1. references
-2. expand on description for m1 and m2
-3. Citation of AI?
-<!--- Anything between these symbols will not render on the published site -->
+Directional Indicator Manual:
+1 - Left
+2 - Right
+3 - Up
+4 - Down
+5 - Close Claw  *Controlled by Reset Button
+6 - Open Claw
+7 - Reset Memory
+8 - Replay in Progress  * LED Light
+9 - Sucessfully Recorded Arm Position
 ```
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
 | Adrian Kan | Athenian School | Mechanical Engineering | Rising Junior | 
-
-**Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
 
 ![Headstone Image](pic.png)
   
@@ -50,16 +53,17 @@ My project: Arduino Robotic Arm, is an enhanced version of the original. With a 
 
 
 # Schematics 
-Wiring Diagram of the Robotic Arm (4 Servos) & Joystick Controller & Segmented Display
+Wiring Diagram of the Robotic Arm (4 Servos) & Joystick Controller & Segmented Display & LED Light & Reset Button WITH Resistors
 
 ![Headstone Image](schematic2.png)
+
 Notes:
 * The 4x4 Keypad is used to substitute the Joystick Controller due to the limitations on Tinkercad (program used to create this schematic)
 * 4.5V Battery is used to substitute the 9V battery used in the physical model
 
 # C++ Codes for Arduino
 
-**Code 1:** \
+**Code 1:** 
 Joystick to Control the Robotic Arm With Display flashing numbers from 1-9
 ```c++
 //CODE 1.0
