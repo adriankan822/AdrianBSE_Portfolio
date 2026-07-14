@@ -594,3 +594,4 @@ Below are resources used for this project, embeded with link for reference.
 - [Scehmatic Diagram Creation: TinkerCad](https://www.tinkercad.com/things/bXKhfOuNItm-robotic-arm-controller-7-segmented-display?sharecode=LeewJ7r1rAMRFM3bcTwUT3AfzPoUdHjL6_iJrbxEljI)
 
 2026 BSE Summer Project Concluded.
+
