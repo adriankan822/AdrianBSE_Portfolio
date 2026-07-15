@@ -24,10 +24,6 @@ Directional Indicator Manual:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/SCJ6xmDAOP4?si=PjynrS-9YHmCODr-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-- This milestone, I sucessfully coded the segmented display into a directional indicator, where the segmented display could show a specific number when the arm is facing the corresponding direction as listed. (1-Left, 2-Right, 3-Up, 4-Down, 5-Close Claw, 6- Open Claw, 7- Reset Memory, 8- Replay in Progress, 9 - Recorded Arm Position). With time to spare, I implemented a LED light and Button to add onto the system on the robotic arm that could memorise a set of the arms position and being able to re-preform the recorded set of positions. The LED is used to specify when the arm is replaying the set of positions, whereas the button is used to erase the recorded set of positions so operators could re-record a new set of position.
-- The biggest challenge in this project is wiring the segmented display to the nanoboard through the breadboard. Since the segmented display had 10 pins, 2 ground and 8 for each individual LED on the display, and each pin is wired to one individual number on the nanoboard, it was challenging to keep track to which number on the nanoboard could power which exact LED on the display. This lesson reminded me to do a deeper research into the components I'm not familar with to prevent multiple trials of rewiring. 
-- I also learned basic coding with C++ as it was the only arduino was compatible with.
-- I hope to delve deeper into C++ or python, computer science in general, as I realised the importance of computer science in the engineering industry and the scope of future careers. 
 
 
 
