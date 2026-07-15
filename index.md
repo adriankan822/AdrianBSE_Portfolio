@@ -1,4 +1,4 @@
-# Smart Robotic Arm + Directional Indicator
+# Robotic Arm + Directional Indicator
 My project: Arduino Robotic Arm, is an enhanced version of the original. With a segmented digital display as directional indicators to showcase the direction of the arm, it allows tasks done by the robotic arm to be completed more effeciently and accurately. For instance, for industrial applications, if the robotic arm is large or hidden, it prevents operators to fully supervise arm's orientation. In which having a directional indicator as a modification could provides the operator with immediate confirmation that the input is being received by the system and an accurate control over the arm.
 
 ```HTML 
